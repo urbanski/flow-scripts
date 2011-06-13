@@ -1,0 +1,10 @@
+#!/bin/bash
+
+#This report simply lists all flows found in the file
+
+if [ "$1" == "" ]; then
+    echo "ERROR: You must supply a data file"
+    exit
+fi
+
+ra -r $1 -M correct -nnn 

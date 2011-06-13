@@ -1,0 +1,11 @@
+#!/bin/bash
+
+#This report generates a simple top-talkers list based on destination IP address
+
+if [ "$1" == "" ]; then
+    echo "ERROR: You must supply a data file"
+    exit
+fi
+
+
+racluster -r $1 -M correct -m daddr -w - - | rasort -nnn -m bytes -s daddr:64 bytes pkts
