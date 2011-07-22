@@ -1,0 +1,15 @@
+port-recon is a script that reads argus data and tries to find IP address and port combinations that may be publicly accessible. If they are publicly accessible (read: accessible from the system running port-recon) then it attempts to fingerprint the service and service version information for the service running on that port. 
+
+Eventually I'd like this to end up in a database.
+
+Usage:
+
+port-recon <argus-file> | identify-services.sh 
+
+port-recon will generate a list of ip addresses and ports that it believes it is accessible. Right now port-recon is using the heavy tcp flow method. port-recon-fin uses the fin && not rst method to try and determine open services. In tests port-recon detected more hosts, with better accuracy, than port-recon-fin does.
+
+In the future:
+
+    Support multiple fingerprint options
+    database save format
+

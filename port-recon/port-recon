@@ -1,0 +1,16 @@
+#!/bin/bash
+
+RA="/usr/local/bin/ra"
+NETWORKS_FILE="networks.lst"
+
+IFILE=$1
+NETWORKS=""
+
+for netw in `cat $NETWORKS_FILE`; do
+	if [ "$NETWORKS" != "" ]; then
+		NETWORKS="$NETWORKS or "
+	fi
+	NETWORKS="$NETWORKS dst net $netw"
+done
+
+$RA -r $IFILE -n -s dport daddr:64 - tcp and \(pkts gt 128\) and \(dst port lte 1024\) and \($NETWORKS\) | sort | uniq
