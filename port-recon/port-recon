@@ -2,9 +2,12 @@
 
 RA="/usr/local/bin/ra"
 NETWORKS_FILE="networks.lst"
+PORTS_FILE="ports.lst"
 
 IFILE=$1
 NETWORKS=""
+PORTS=""
+RACMD="$RA -r $IFILE -n -s dport daddr:64 "
 
 for netw in `cat $NETWORKS_FILE`; do
 	if [ "$NETWORKS" != "" ]; then
@@ -13,4 +16,12 @@ for netw in `cat $NETWORKS_FILE`; do
 	NETWORKS="$NETWORKS dst net $netw"
 done
 
-$RA -r $IFILE -n -s dport daddr:64 - tcp and \(pkts gt 128\) and \(dst port lte 1024\) and \($NETWORKS\) | sort | uniq
+for port in `cat $PORTS_FILE`; do
+	if [ "$PORTS" != "" ]; then
+		PORTS="$PORTS or "
+	fi
+	PORTS="$PORTS dst port $port"
+done
+
+$RA -r $IFILE -n -s dport daddr:64 - tcp and \(pkts gt 128\) and \(dst port lte 1024 or \($PORTS\)\) and \($NETWORKS\) | sort | uniq
+#$RACMD - tcp and \(pkts gt 8\) and \(dst port lte 1024\) and \($NETWORKS\) and fin and not rst  | sort | uniq
